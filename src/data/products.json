@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Yerba",
+    "description": "alimento",
+    "price": 4000,
+    "stock": 300,
+    "category": "Alimento",
+    "status": true,
+    "code": "1733283818042",
+    "id": "1733283818043"
+  }
+]

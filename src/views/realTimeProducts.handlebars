@@ -1,0 +1,61 @@
+<h1>Productos en Tiempo Real</h1>
+
+<form id="productForm">
+    <input type="text" id="title" placeholder="Título" required>
+    <input type="text" id="description" placeholder="Descripción" required>
+    <input type="number" id="price" placeholder="Precio" required>
+    <input type="number" id="stock" placeholder="Stock" required>
+    <input type="text" id="category" placeholder="Categoría" required>
+    <button type="submit">Agregar Producto</button>
+</form>
+
+<div id="productsList">
+    {{#each products}}
+    <div class="product-card">
+        <h2>{{this.title}}</h2>
+        <p>{{this.description}}</p>
+        <p>Precio: ${{this.price}}</p>
+        <p>Stock: {{this.stock}}</p>
+        <p>Categoría: {{this.category}}</p>
+        <button onclick="deleteProduct('{{this.id}}')">Eliminar</button>
+    </div>
+    {{/each}}
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    document.getElementById('productForm').onsubmit = (e) => {
+        e.preventDefault();
+        const product = {
+            title: document.getElementById('title').value,
+            description: document.getElementById('description').value,
+            price: Number(document.getElementById('price').value),
+            stock: Number(document.getElementById('stock').value),
+            category: document.getElementById('category').value,
+            status: true,
+            code: Date.now().toString()
+        };
+        socket.emit('addProduct', product);
+        e.target.reset();
+    };
+
+    function deleteProduct(id) {
+        socket.emit('deleteProduct', id);
+    }
+
+    socket.on('updateProducts', (products) => {
+        const productsList = document.getElementById('productsList');
+        productsList.innerHTML = products.map(product => `
+            <div class="product-card">
+                <h2>${product.title}</h2>
+                <p>${product.description}</p>
+                <p>Precio: $${product.price}</p>
+                <p>Stock: ${product.stock}</p>
+                <p>Categoría: ${product.category}</p>
+                <button onclick="deleteProduct('${product.id}')">Eliminar</button>
+            </div>
+        `).join('');
+    });
+</script>
