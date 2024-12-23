@@ -24,7 +24,7 @@ Este es un proyecto de e-commerce desarrollado como parte de la entrega final. L
 1. Clona el repositorio:
 
    ```bash
-   git clone https://github.com/USERNAME/REPOSITORY.git
+   git clone https://github.com/GBottarlini/entregaFinal-BottarliniGenaro.git
    ```
 
 2. Navega a la carpeta del proyecto:
