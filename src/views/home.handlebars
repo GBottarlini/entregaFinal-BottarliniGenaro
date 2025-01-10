@@ -1,4 +1,28 @@
+<link rel="stylesheet" href="/css/styles.css">
+
 <h1>Productos Disponibles</h1>
+
+<div class="filter-container">
+    <form id="filterForm">
+        <label for="categoryFilter">Filtrar por categoría:</label>
+        <select id="categoryFilter">
+            <option value="">Todas las categorías</option>
+            <option value="Electrónica">Electrónica</option>
+            <option value="Ropa">Ropa</option>
+            <option value="Hogar">Hogar</option>
+            <option value="Alimento">Alimento</option>
+            <option value="Raza">Raza</option>
+        </select>
+        <label for="sortFilter">Ordenar por:</label>
+        <select id="sortFilter">
+            <option value="">Ordenar por</option>
+            <option value="asc">Precio Ascendente</option>
+            <option value="desc">Precio Descendente</option>
+        </select>
+        <button type="submit">Filtrar</button>
+    </form>
+</div>
+
 <div class="products-container">
     {{#each products}}
     <div class="product-card">
@@ -7,6 +31,71 @@
         <p>Precio: ${{this.price}}</p>
         <p>Stock: {{this.stock}}</p>
         <p>Categoría: {{this.category}}</p>
+        <a href="/api/products/{{this._id}}">Ver Detalles</a>
+        <button onclick="addToCart('{{this._id}}')">Agregar al Carrito</button>
     </div>
     {{/each}}
 </div>
+
+<div class="pagination">
+    {{#if hasPrevPage}}
+    <a href="{{prevLink}}">Anterior</a>
+    {{/if}}
+    <span>Página {{page}} de {{totalPages}}</span>
+    {{#if hasNextPage}}
+    <a href="{{nextLink}}">Siguiente</a>
+    {{/if}}
+</div>
+
+<script>
+    document.getElementById('filterForm').onsubmit = function(e) {
+        e.preventDefault();
+        const category = document.getElementById('categoryFilter').value;
+        const sort = document.getElementById('sortFilter').value;
+        const limit = 10; // Puedes ajustar el límite según sea necesario
+        const page = 1; // Puedes ajustar la página según sea necesario
+        window.location.href = `/api/products?category=${category}&sort=${sort}&limit=${limit}&page=${page}`;
+    };
+
+    // Verificar si ya existe un carrito en localStorage
+    if (!localStorage.getItem('cartId')) {
+        // Crear un nuevo carrito y almacenar su ID en localStorage
+        fetch('/api/carts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ products: [] }) // Crear un carrito vacío
+        })
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem('cartId', data._id); // Almacenar el ID del carrito
+        })
+        .catch(error => console.error('Error al crear el carrito:', error));
+    }
+
+    function addToCart(productId) {
+        const cartId = localStorage.getItem('cartId'); // Obtener el ID del carrito
+
+        fetch(`/api/carts/${cartId}/product/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ quantity: 1 })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al agregar el producto al carrito');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(`Producto ${productId} agregado al carrito`, data);
+            // Aquí podrías mostrar una notificación al usuario
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>

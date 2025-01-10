@@ -1,13 +1,12 @@
 import express from 'express';
-import ProductManager from '../services/ProductManager.js';
+import Product from '../models/Product.js';
 
 const router = express.Router();
-const productManager = new ProductManager();
 
 router.get('/', async (req, res) => {
     try {
-        const productsCount = productManager.products.length; // Obtener el número de productos
-        const cartsCount = 0;
+        const productsCount = await Product.countDocuments(); // Obtener el número de productos
+        const cartsCount = 0; // Aquí puedes agregar lógica para contar los carritos si es necesario
 
         res.json({
             status: 'success',

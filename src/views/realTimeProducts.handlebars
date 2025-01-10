@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/css/styles.css">
 <h1>Productos en Tiempo Real</h1>
 
 <form id="productForm">
@@ -17,7 +18,7 @@
         <p>Precio: ${{this.price}}</p>
         <p>Stock: {{this.stock}}</p>
         <p>Categoría: {{this.category}}</p>
-        <button onclick="deleteProduct('{{this.id}}')">Eliminar</button>
+        <button onclick="deleteProduct('{{this._id}}')">Eliminar</button>
     </div>
     {{/each}}
 </div>
@@ -54,7 +55,7 @@
                 <p>Precio: $${product.price}</p>
                 <p>Stock: ${product.stock}</p>
                 <p>Categoría: ${product.category}</p>
-                <button onclick="deleteProduct('${product.id}')">Eliminar</button>
+                <button onclick="deleteProduct('${product._id}')">Eliminar</button>
             </div>
         `).join('');
     });

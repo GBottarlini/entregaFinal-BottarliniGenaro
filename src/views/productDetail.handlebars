@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="/css/styles.css">
+
+<link rel="stylesheet" href="/css/styles.css">
+
+<h1>{{product.title}}</h1>
+<div class="image-gallery">
+    <img src="{{product.imageUrl}}" alt="{{product.title}}" />
+</div>
+<p>{{product.description}}</p>
+<p>Precio: ${{product.price}}</p>
+<p>Stock: {{product.stock}}</p>
+<p>Categoría: {{product.category}}</p>
+<button onclick="addToCart('{{product._id}}')">Agregar al Carrito</button>
+
+<div id="notification" class="notification hidden">Producto agregado al carrito</div>
+
+<script>
+    function showNotification(message) {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.classList.remove('hidden');
+        setTimeout(() => {
+            notification.classList.add('hidden');
+        }, 3000);
+    }
+
+    function addToCart(productId) {
+        const cartId = localStorage.getItem('cartId');
+        fetch(`/api/carts/${cartId}/product/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ quantity: 1 })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al agregar el producto al carrito');
+            }
+            showNotification('Producto agregado al carrito');
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>

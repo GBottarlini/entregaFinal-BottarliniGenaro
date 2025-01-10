@@ -35,3 +35,19 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    transition: opacity 0.5s;
+    z-index: 1000; /* Asegura que la notificación esté por encima de otros elementos */
+}
+
+.hidden {
+    opacity: 0;
+}
